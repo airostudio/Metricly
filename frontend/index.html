@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SkillAssess Pro - Technical Skills Assessment Platform</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/assessment.css">
+</head>
+<body>
+    <!-- Security Indicators -->
+    <div class="security-indicators">
+        <div class="security-badge active" id="tabFocus">
+            <span>●</span> Tab Active
+        </div>
+        <div class="security-badge" id="copyPaste">
+            <span>🔒</span> Copy/Paste Locked
+        </div>
+        <div class="security-badge" id="aiDetection">
+            <span>🤖</span> AI Detection Active
+        </div>
+    </div>
+
+    <!-- Auth Modal (shown first) -->
+    <div class="modal active" id="authModal">
+        <div class="modal-content">
+            <h2 class="modal-title">Welcome to SkillAssess Pro</h2>
+            <div id="authForm">
+                <div class="form-group">
+                    <label>Email Address</label>
+                    <input type="email" id="candidateEmail" placeholder="your.email@example.com" required>
+                </div>
+                <div class="form-group">
+                    <label>Access Code</label>
+                    <input type="text" id="accessCode" placeholder="Enter your access code" required>
+                </div>
+                <div class="form-group">
+                    <label>Assessment ID</label>
+                    <input type="text" id="assessmentId" placeholder="Assessment ID from invitation" required>
+                </div>
+
+                <div class="consent-section">
+                    <h3>Consent Required</h3>
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="videoConsent">
+                        I consent to video/screen recording during this assessment
+                    </label>
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="dataConsent">
+                        I consent to data processing and storage for assessment purposes
+                    </label>
+                </div>
+
+                <div class="action-buttons">
+                    <button class="btn btn-primary" id="startBtn" disabled>Start Assessment</button>
+                </div>
+                <p id="authError" class="error-message"></p>
+            </div>
+        </div>
+    </div>
+
+    <div class="container" id="assessmentContainer" style="display: none;">
+        <!-- Header -->
+        <header class="header">
+            <div class="logo">SkillAssess Pro</div>
+            <div class="timer-display">
+                <div class="timer" id="questionTimer">Question: 00:00</div>
+                <div class="timer" id="firstKeyTimer">First Key: --:--</div>
+                <div class="timer" id="totalTimer">Total: 00:00</div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="content">
+            <!-- Sidebar Navigation -->
+            <aside class="sidebar">
+                <h3>Assessment Progress</h3>
+                <div class="question-nav" id="questionNav">
+                    <!-- Questions will be populated here -->
+                </div>
+                <div class="progress-summary">
+                    <div class="progress-item">
+                        <span>Questions Completed:</span>
+                        <span id="completedCount">0/10</span>
+                    </div>
+                    <div class="progress-bar-container">
+                        <div id="progressBar" class="progress-bar"></div>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- Question Area -->
+            <section class="question-area">
+                <div class="question-header">
+                    <span class="difficulty-badge beginner" id="difficultyBadge">Beginner</span>
+                    <h2 class="question-title" id="questionTitle">Loading Question...</h2>
+                    <div class="question-description" id="questionDescription">
+                        Please wait while the question loads...
+                    </div>
+                </div>
+
+                <!-- Code Editor -->
+                <div class="code-editor">
+                    <div class="editor-header">
+                        <span id="languageDisplay">JavaScript</span>
+                        <div class="editor-controls">
+                            <button class="editor-btn" id="runBtn" disabled>▶ Run</button>
+                            <button class="editor-btn" id="resetBtn">↺ Reset</button>
+                        </div>
+                    </div>
+                    <div class="editor-content" id="editor" contenteditable="true" spellcheck="false"></div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="action-buttons">
+                    <button class="btn btn-secondary" id="skipBtn">Skip Question</button>
+                    <button class="btn btn-primary" id="submitBtn" disabled>Submit Answer</button>
+                    <button class="btn btn-success" id="nextBtn" style="display: none;">Next Question</button>
+                    <button class="btn btn-danger" id="completeBtn" style="display: none;">Complete Assessment</button>
+                </div>
+
+                <!-- Test Results -->
+                <div id="testResults" style="display: none;">
+                    <h3>Test Results</h3>
+                    <div id="testOutput"></div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Warning Modal -->
+    <div class="modal" id="warningModal">
+        <div class="modal-content">
+            <h3 class="modal-title" id="warningTitle">⚠️ Security Alert</h3>
+            <p class="modal-message" id="warningMessage"></p>
+            <div class="action-buttons">
+                <button class="btn btn-primary" id="warningConfirm">Acknowledge</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Completion Modal -->
+    <div class="modal" id="completionModal">
+        <div class="modal-content">
+            <h3 class="modal-title">🎉 Assessment Complete!</h3>
+            <div id="completionMessage">
+                <p>Thank you for completing the assessment.</p>
+                <div class="completion-stats">
+                    <div class="stat-item">
+                        <span class="stat-label">Questions Completed:</span>
+                        <span class="stat-value" id="finalCompleted">0</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Total Time:</span>
+                        <span class="stat-value" id="finalTime">0:00</span>
+                    </div>
+                </div>
+                <p class="completion-note">Your results have been submitted to the employer. You may now close this window.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+    <script src="js/config.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/security.js"></script>
+    <script src="js/timer.js"></script>
+    <script src="js/editor.js"></script>
+    <script src="js/assessment.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>

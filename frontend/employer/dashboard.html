@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employer Dashboard - SkillAssess Pro</title>
+    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <aside class="dashboard-sidebar">
+            <div class="logo">SkillAssess Pro</div>
+            <nav class="dashboard-nav">
+                <a href="#overview" class="nav-link active" data-view="overview">
+                    <span>📊</span> Overview
+                </a>
+                <a href="#tests" class="nav-link" data-view="tests">
+                    <span>📝</span> Tests
+                </a>
+                <a href="#candidates" class="nav-link" data-view="candidates">
+                    <span>👥</span> Candidates
+                </a>
+                <a href="#results" class="nav-link" data-view="results">
+                    <span>📈</span> Results
+                </a>
+                <a href="#settings" class="nav-link" data-view="settings">
+                    <span>⚙️</span> Settings
+                </a>
+            </nav>
+            <div class="sidebar-footer">
+                <div class="user-info">
+                    <span id="userEmail">employer@example.com</span>
+                </div>
+                <button class="btn btn-secondary" id="logoutBtn">Logout</button>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="dashboard-main">
+            <header class="dashboard-header">
+                <h1 id="viewTitle">Overview</h1>
+                <button class="btn btn-primary" id="createTestBtn">+ Create New Test</button>
+            </header>
+
+            <!-- Overview View -->
+            <div id="overview-view" class="view active">
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon">📝</div>
+                        <div class="stat-content">
+                            <div class="stat-value" id="totalTests">0</div>
+                            <div class="stat-label">Total Tests</div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">👥</div>
+                        <div class="stat-content">
+                            <div class="stat-value" id="totalCandidates">0</div>
+                            <div class="stat-label">Total Candidates</div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">✅</div>
+                        <div class="stat-content">
+                            <div class="stat-value" id="completedAssessments">0</div>
+                            <div class="stat-label">Completed</div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">📊</div>
+                        <div class="stat-content">
+                            <div class="stat-value" id="avgScore">0%</div>
+                            <div class="stat-label">Avg Score</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="dashboard-section">
+                    <h2>Recent Activity</h2>
+                    <div class="table-container">
+                        <table class="data-table" id="recentActivityTable">
+                            <thead>
+                                <tr>
+                                    <th>Candidate</th>
+                                    <th>Test</th>
+                                    <th>Status</th>
+                                    <th>Score</th>
+                                    <th>Date</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Populated by JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tests View -->
+            <div id="tests-view" class="view">
+                <div class="dashboard-section">
+                    <div class="table-container">
+                        <table class="data-table" id="testsTable">
+                            <thead>
+                                <tr>
+                                    <th>Title</th>
+                                    <th>Questions</th>
+                                    <th>Status</th>
+                                    <th>Attempts</th>
+                                    <th>Avg Score</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Populated by JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Candidates View -->
+            <div id="candidates-view" class="view">
+                <div class="dashboard-section">
+                    <div class="table-container">
+                        <table class="data-table" id="candidatesTable">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Email</th>
+                                    <th>Assessments</th>
+                                    <th>Last Activity</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Populated by JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Results View -->
+            <div id="results-view" class="view">
+                <div class="dashboard-section">
+                    <h2>Assessment Results</h2>
+                    <div id="resultsContent">
+                        <!-- Populated by JS -->
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Create Test Modal -->
+    <div class="modal" id="createTestModal">
+        <div class="modal-content large">
+            <h3 class="modal-title">Create New Test</h3>
+            <form id="createTestForm">
+                <div class="form-group">
+                    <label>Test Title</label>
+                    <input type="text" name="title" required placeholder="e.g., Frontend Developer Assessment">
+                </div>
+                <div class="form-group">
+                    <label>Description</label>
+                    <textarea name="description" rows="3" placeholder="Describe the test purpose and requirements"></textarea>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Total Questions</label>
+                        <input type="number" name="totalQuestions" value="10" min="1" max="50">
+                    </div>
+                    <div class="form-group">
+                        <label>Time per Question (minutes)</label>
+                        <input type="number" name="questionTimeLimit" value="15" min="1" max="60">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group checkbox-group">
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="enableAIDetection" checked>
+                            Enable AI Detection
+                        </label>
+                    </div>
+                    <div class="form-group checkbox-group">
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="strictMode" checked>
+                            Strict Mode (No tab switching)
+                        </label>
+                    </div>
+                </div>
+                <div class="action-buttons">
+                    <button type="button" class="btn btn-secondary" id="cancelCreateTest">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Create Test</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Invite Candidate Modal -->
+    <div class="modal" id="inviteCandidateModal">
+        <div class="modal-content">
+            <h3 class="modal-title">Invite Candidate</h3>
+            <form id="inviteCandidateForm">
+                <input type="hidden" name="testId" id="inviteTestId">
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" name="email" required placeholder="candidate@example.com">
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>First Name</label>
+                        <input type="text" name="firstName" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Last Name</label>
+                        <input type="text" name="lastName" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Expires In (days)</label>
+                    <input type="number" name="expiresInDays" value="7" min="1" max="30">
+                </div>
+                <div class="action-buttons">
+                    <button type="button" class="btn btn-secondary" id="cancelInvite">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Send Invitation</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="../js/config.js"></script>
+    <script src="../js/api.js"></script>
+    <script src="js/dashboard.js"></script>
+</body>
+</html>
