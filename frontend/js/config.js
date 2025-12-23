@@ -2,10 +2,8 @@
 const CONFIG = {
     API_BASE_URL: window.location.hostname === 'localhost'
         ? 'http://localhost:3000/api'
-        : '/api',
-    SOCKET_URL: window.location.hostname === 'localhost'
-        ? 'http://localhost:3000'
-        : window.location.origin,
+        : `${window.location.origin}/api`,
+    SOCKET_URL: window.location.origin,
 
     // Assessment settings (will be overridden by server config)
     totalQuestions: 10,
